@@ -13,5 +13,5 @@ SPROXY_PORT = None
 CB_LINKER = "http://sotool.co/translink?r=%s&m=%s"
 WORK_DIR = os.path.dirname(os.path.abspath(__file__))
 DOMAIN_BASE = ''
-MGO_CONN = "mongodb://btso:azlmsxkn!2#@45.32.42.152:27017/btso"
-MGO_DB = "btso"
+MGO_CONN = ""
+MGO_DB = ""
