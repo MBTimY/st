@@ -1,0 +1,19 @@
+db.btso__1_1__handledetail.find(
+        {"$text":{"$search":"fuck"}},
+        {"title":1},
+        {score:{$meta : "textScore"}}
+).sort({score:{$meta : "textScore"}})
+
+
+db.btso__1_1__handledetail.find(
+        {
+            $text:
+            {
+                $search:"0345-初裏無修正",
+                $caseSensitive:true
+            }
+        },
+        {score:{$meta : "textScore"}, title:1}
+).sort({score:{$meta : "textScore"}})
+
+db.btso__1_1__handledetail.find( { $text: { $search: "Coffee", $caseSensitive: true } } )

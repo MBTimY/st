@@ -12,6 +12,7 @@ import base64
 # TODO这个作为一个被wrapper调用的路由, 主要是拿来重新访问我们的包装网页的
 # 这个handler是wrapper的回调link
 class TRANSHandler(tornado.web.RequestHandler):
+    
     @gen.coroutine
     def get(self):
         redirect = self.get_argument('r', '')

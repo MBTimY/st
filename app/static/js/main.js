@@ -1,7 +1,3 @@
-var torrS = "http://127.0.0.1:8080/searchTORR"
-var picS = "http://127.0.0.1:8080/searchPIC"
-
-
 var showPicTable = function(data){
     $("#pages").empty();
     $("#repotbody").empty();
@@ -17,12 +13,12 @@ var showPicTable = function(data){
         }
 
         if (data.paginations.length >0 ) {
-            page_num = parseInt(data.paginations[0][0]);
-            liArray = [];
+            var page_num = parseInt(data.paginations[0][0]);
+            var liArray = [];
 
             if (page_num == 2){
-                temp_li = document.createElement("li");
-                temp_a = document.createElement("a");
+                var temp_li = document.createElement("li");
+                var temp_a = document.createElement("a");
                 $(temp_li).attr("class", "disabled");
                 $(temp_a).text("1");
                 $(temp_li).append(temp_a);
@@ -85,12 +81,16 @@ var onPicPage = function () {
 var onBtPage = function () {
     var pageNum = parseInt($(this).text());
     $.ajax({
-        url: $(this).attr("data-url"),
+        url: "/searchTORR",
         type: "get",
+        data : {
+            k: $(this).attr("data-k"),
+            pn: pageNum
+        },
         dataType: "json",
         success: function(respData, status, jqXHR){
 
-            if (!showBtTable(respData, pageNum)) {
+            if (!showBtTable(respData)) {
                 $("#repotbody").addClass("hidden");
                 $("#pages").addClass("hidden");
 
@@ -109,37 +109,34 @@ var onBtPage = function () {
     })
 }
 
-var showBtTable = function (data, nowPageN) {
+var showBtTable = function (data) {
+    var search_name = $("#argInput").val();
     $("#pages").empty();
     $("#repotbody").empty();
-    if ( data.hasOwnProperty("torrents") && 
-        data.hasOwnProperty("paginations") && 
-        data.torrents.length > 0 ){
-            template_div = "<div class=\"text-success\"><h3></h3><blockquote><p class=\"text-primary\"></p></blockquote></div>"
-            for (i in data.torrents) {
-                temp_div = $(template_div);
-                temp_div.find("h3").text(data.torrents[i]["name"]);
-                temp_div.find("p").text(decodeURI(data.torrents[i]["magnet"]));
+    if ( data.hasOwnProperty("list") ){
+            var template_div = "<div class=\"text-success\"><h3></h3><blockquote><p class=\"text-primary\"></p></blockquote></div>"
+            for (i in data.list) {
+                var temp_div = $(template_div);
+                temp_div.find("h3").text(data.list[i]["title"]);
+                temp_div.find("p").text(decodeURI(data.list[i]["magnet"]));
                 $("#repotbody").append(temp_div);
             }
 
-            liArray = []
-            if (data.paginations.length >0 ) {
-                for (i in data.paginations){
-                    temp_li = document.createElement("li");
-                    temp_a = document.createElement("a");
-                    $(temp_a).click(onBtPage);
-                    $(temp_a).text(data.paginations[i][0]);
-                    if (typeof nowPageN != undefined && data.paginations[i][0] == nowPageN) {
-                        $(temp_li).attr("class", "disabled");
-                    } else {
-                        $(temp_a).attr("data-url", data.paginations[i][1])
-                    }
-                    $(temp_li).append(temp_a);
-                    liArray.push(temp_li);
+            var liArray = []
+            for (i = data.startPN; i <= data.endPN; i++){
+                var temp_li = document.createElement("li");
+                var temp_a = document.createElement("a");
+                $(temp_a).click(onBtPage);
+                $(temp_a).text(i);
+                if (data.currentPN == i) {
+                    $(temp_li).attr("class", "disabled");
+                } else {
+                    $(temp_a).attr("data-k", search_name)
                 }
-                $("#pages").append(liArray);
+                $(temp_li).append(temp_a);
+                liArray.push(temp_li);
             }
+            $("#pages").append(liArray);
             return true;
     }
     return false;
@@ -151,7 +148,7 @@ var receiveBtReport = function () {
 
     $("#notice").removeClass("hidden"); 
     $("#notice").text("正在搜索相关种子资源，请耐心等待。。。");
-    search_name = $("#argInput").val();
+    var search_name = $("#argInput").val();
     if (search_name) {
       $.ajax({
           url: "/searchTORR",
@@ -165,7 +162,7 @@ var receiveBtReport = function () {
 
                 $("#pages").removeClass("hidden");
                 $("#repotbody").removeClass("hidden"); 
-                if (!showBtTable(respData, 1)) {
+                if (!showBtTable(respData)) {
                     $("#pages").addClass("hidden");
                     $("#repotbody").addClass("hidden");
 
@@ -187,7 +184,7 @@ var receivePicReport = function() {
 
     $("#notice").removeClass("hidden"); 
     $("#notice").text("正在搜索图片所匹配的地址，请耐心等待。。。");
-    keyword = $("#argInput").val();
+    var keyword = $("#argInput").val();
     if (keyword) {
       $.ajax({
           url: "/searchPIC",
