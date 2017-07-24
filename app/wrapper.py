@@ -82,7 +82,7 @@ def GenWrapper(name):
 @gen.coroutine
 def main():
     navi = Navigate()
-    html_content = yield navi.goforword('https://btso.pw/search/武藤兰')
+    html_content = yield navi.goforword('https://xxx.xx/xxxxx/xxx')
     if html_content == '':
         print('connect failed!')
         return
