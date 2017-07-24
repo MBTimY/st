@@ -10,7 +10,7 @@ COOKIE_SECRET = 'h1_f/XgBog@<oSw+c>8QQ^U/!Gqt?xDvblX!DozHIf=\
 XSRF = True
 SPROXY_ADDR = ''
 SPROXY_PORT = None
-CB_LINKER = "http://sotool.co/translink?r=%s&m=%s"
+CB_LINKER = "http://xxx.xx/translink?r=%s&m=%s"
 WORK_DIR = os.path.dirname(os.path.abspath(__file__))
 DOMAIN_BASE = ''
 MGO_CONN = ""
